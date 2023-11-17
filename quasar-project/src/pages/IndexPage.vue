@@ -1,49 +1,42 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
+    <notes-list
+      title=""
+      :active="true"
       :todos="todos"
       :meta="meta"
-    ></example-component>
+      @addNote="addNote"
+      @removeNote="removeNote"
+    ></notes-list>
   </q-page>
 </template>
 
 <script lang="ts">
 import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
+import NotesList from 'components/NotesList.vue';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'IndexPage',
-  components: { ExampleComponent },
+  components: { NotesList },
   setup () {
-    const todos = ref<Todo[]>([
-      {
-        id: 1,
-        content: 'ct1'
-      },
-      {
-        id: 2,
-        content: 'ct2'
-      },
-      {
-        id: 3,
-        content: 'ct3'
-      },
-      {
-        id: 4,
-        content: 'ct4'
-      },
-      {
-        id: 5,
-        content: 'ct5'
-      }
-    ]);
+    const todos = ref<Todo[]>([]);
     const meta = ref<Meta>({
       totalCount: 1200
     });
-    return { todos, meta };
+
+    function addNote(newNote: Todo) {
+      todos.value.push({
+        id: todos.value.length + 1,
+        content: newNote.content
+      });
+    }
+
+    function removeNote(id: number) {
+      todos.value = todos.value.filter(todo => todo.id !== id);
+    }
+
+    return { todos, meta, addNote, removeNote };
   }
 });
 </script>
